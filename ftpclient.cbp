@@ -32,7 +32,9 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="ftp_client.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="test.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

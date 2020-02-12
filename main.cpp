@@ -60,8 +60,6 @@ int cliopen(char* host,int port){
     servaddr.sin_port=htons(port);
 
 
-
-
     ///下面是验证hostent和sockaddr是大端还是小端
 //    char* t=(char*)(ht->h_addr);
 //    cout<<bitset<32>(*(int*)t)<<endl;
@@ -210,7 +208,7 @@ void FtpPut(int dataSock,char* filename){
 }
 
 void CmdTcp(int cmdSock){
-    int maxfdp1,nread,nwrite,replycode,tag=0,dataSock,dataPort;
+    int maxfdp1,nread,nwrite,replycode,tag=0,dataSock,dataPort,recvSock;
     in_addr myaddr;
     fd_set rset;
     FD_ZERO(&rset);
@@ -387,20 +385,44 @@ void CmdTcp(int cmdSock){
                     nwrite=sprintf(wbuf,"list\n");
                     if(write(cmdSock,wbuf,nwrite)!=nwrite)
                         printf("write error\n");
-                    int recvSock=getRecvPort(dataSock);
-                    FtpList(recvSock);
-                    close(dataSock);
+//                    int recvSock=getRecvPort(dataSock);
+//                    FtpList(recvSock);
+//                    close(dataSock);
                 }else if(tag==CMDGET){
                     nwrite=sprintf(wbuf,"RETR %s\n",filename);
                     if(write(cmdSock,wbuf,nwrite)!=nwrite)
                         printf("write error\n");
-                    int recvSock=getRecvPort(dataSock);
-                    FtpGet(recvSock,filename);
-                    close(dataSock);
+//                    int recvSock=getRecvPort(dataSock);
+//                    FtpGet(recvSock,filename);
+//                    close(dataSock);
                 }else if(tag==CMDPUT){
                     nwrite=sprintf(wbuf,"STOR %s\n",filename);
                     if(write(cmdSock,wbuf,nwrite)!=nwrite)
                         printf("write error\n");
+//                    int recvSock=getRecvPort(dataSock);
+//                    FtpPut(recvSock,filename);
+//                    close(dataSock);
+                }
+            }else if(strncmp(rbuf,"150",3)==0){
+                if(tag==CMDLS){
+                    ///先建立数据连接 再发送命令
+//                    nwrite=sprintf(wbuf,"list\n");
+//                    if(write(cmdSock,wbuf,nwrite)!=nwrite)
+//                        printf("write error\n");
+                    int recvSock=getRecvPort(dataSock);
+                    FtpList(recvSock);
+                    close(dataSock);
+                }else if(tag==CMDGET){
+//                    nwrite=sprintf(wbuf,"RETR %s\n",filename);
+//                    if(write(cmdSock,wbuf,nwrite)!=nwrite)
+//                        printf("write error\n");
+                    int recvSock=getRecvPort(dataSock);
+                    FtpGet(recvSock,filename);
+                    close(dataSock);
+                }else if(tag==CMDPUT){
+//                    nwrite=sprintf(wbuf,"STOR %s\n",filename);
+//                    if(write(cmdSock,wbuf,nwrite)!=nwrite)
+//                        printf("write error\n");
                     int recvSock=getRecvPort(dataSock);
                     FtpPut(recvSock,filename);
                     close(dataSock);
