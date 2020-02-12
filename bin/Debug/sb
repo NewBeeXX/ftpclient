@@ -1,1 +1,91 @@
 sba
+10000001 00101111 10101000 11000000
+
+char* t=(char*)(ht->h_addr);
+cout<<bitset<32>(*(int*)t)<<endl;
+unsigned char u1=t[3];
+printf("localip: %u.%u.%u.%u\n",(unsigned char)t[0],(unsigned char)t[1],(unsigned char)t[2]
+           ,(unsigned char)t[3]);
+char ipbuf[20]={'\0'};
+printf("ip:: %s\n",inet_ntop(AF_INET,&servaddr.sin_addr.s_addr,ipbuf,20));
+
+10000001 00101111 10101000 11000000
+localip: 192.168.47.129
+ip:: 192.168.47.129
+
+
+
+
+
+qyw@qyw-virtual-machine:~/ftpclient/bin/Debug$ ./ftpclient 192.168.47.129
+localip:192.168.47.129
+220 (vsFTPd 3.0.3)
+Name:qyw
+331 Please specify the password.
+Password:20016286n
+230 Login successful.
+ls
+lisopen: addr:192.168.47.129 port:37709 datasock:4
+port send to server: PORT 192,168,47,129,147,77
+drwxrwxr-x    3 1000     1000         4096 Oct 19 18:02 ICPC
+drwxrwxr-x    2 1000     1000         4096 Oct 19 20:18 PY
+drwxrwxrwx    4 1000     1000         4096 Feb 07 00:24 RedBasedl
+-rwxrw-rw-    1 1000     1000      9142104 Dec 03 22:25 YaHeiConsolas.tar.gz
+-rwxrw-r--    1 1000     1000     14476556 May 21  2008 YaHeiConsolas.ttf
+drwxr-xr-x   14 0        0            4096 Oct 23  2018 cgminer
+drwx------    2 1000     1000         4096 Feb 07 14:40 d1
+-rw-r--r--    1 1000     1000         8980 Sep 08  2018 examples.desktop
+drwxrwxr-x    8 1000     1000         4096 Feb 12 12:24 ftpclient
+drwxrwxr-x    4 1000     1000         4096 Jan 30 19:48 goodbase
+-rw-r--r--    1 1000     1000        12215 Feb 11 16:33 main.cpp
+drwxrwxr-x    3 1000     1000         4096 Jan 17 00:40 mybase
+drwxrwxr-x    3 1000     1000         4096 Jan 17 12:03 mybaseBackup
+drwxrwxr-x    3 1000     1000         4096 Sep 08  2018 myfile
+drwxrwxr-x    6 1000     1000         4096 Feb 06 21:13 redbase-master
+-rw-------    1 1000     1000            4 Feb 11 21:59 sb
+drwxr-xr-x    2 1000     1000         4096 Dec 02 21:34 下载
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 公共的
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 图片
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 文档
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 桌面
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 模板
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 视频
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 音乐
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+226 Directory send OK.
+
+
+
+ftp> ls
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+drwxrwxr-x    3 1000     1000         4096 Oct 19 18:02 ICPC
+drwxrwxr-x    2 1000     1000         4096 Oct 19 20:18 PY
+drwxrwxrwx    4 1000     1000         4096 Feb 07 00:24 RedBasedl
+-rwxrw-rw-    1 1000     1000      9142104 Dec 03 22:25 YaHeiConsolas.tar.gz
+-rwxrw-r--    1 1000     1000     14476556 May 21  2008 YaHeiConsolas.ttf
+drwxr-xr-x   14 0        0            4096 Oct 23  2018 cgminer
+drwx------    2 1000     1000         4096 Feb 07 14:40 d1
+-rw-r--r--    1 1000     1000         8980 Sep 08  2018 examples.desktop
+drwxrwxr-x    8 1000     1000         4096 Feb 12 12:35 ftpclient
+drwxrwxr-x    4 1000     1000         4096 Jan 30 19:48 goodbase
+-rw-r--r--    1 1000     1000        12215 Feb 11 16:33 main.cpp
+drwxrwxr-x    3 1000     1000         4096 Jan 17 00:40 mybase
+drwxrwxr-x    3 1000     1000         4096 Jan 17 12:03 mybaseBackup
+drwxrwxr-x    3 1000     1000         4096 Sep 08  2018 myfile
+drwxrwxr-x    6 1000     1000         4096 Feb 06 21:13 redbase-master
+-rw-------    1 1000     1000            4 Feb 11 21:59 sb
+drwxr-xr-x    2 1000     1000         4096 Dec 02 21:34 ??????
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 ?????????
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 ??????
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 ??????
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 ??????
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 ??????
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 ??????
+drwxr-xr-x    2 1000     1000         4096 Sep 08  2018 ??????
+226 Directory send OK.
+
+
+
+

@@ -22,5 +22,5 @@ void FtpGet(int sck,char* pDownLoadFileName);
 void FtpPut(int sck,char* pUploadFileName);
 void FtpList(int sck);
 void CmdTcp(int sockfd);
-
+int lisopen(char* host,in_addr* addr,int* dataPort);
 #endif // FTP_CLIENT_H_INCLUDED
