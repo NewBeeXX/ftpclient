@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1581488971 source:/home/qyw/ftpclient/main.cpp
+1582259345 source:/home/qyw/ftpclient/main.cpp
 	<stdio.h>
 	<sys/types.h>
 	<sys/socket.h>
@@ -16,5 +16,5 @@
 
 1581417148 source:/home/qyw/ftpclient/test.cpp
 
-1581477962 /home/qyw/ftpclient/ftp_client.h
+1582257495 /home/qyw/ftpclient/ftp_client.h
 

@@ -22,7 +22,6 @@ struct sockaddr_in servaddr;
 in_addr localip;
 
 int main(int argc,char* argv[]){
-
     if(argc!=2){
         printf("use:%s <hostname>\n",argv[0]);
         exit(0);
@@ -49,18 +48,18 @@ int cliopen(char* host,int port){
         printf("socket error.\n");
         return -1;
     }
-    ///Õâ¸öget µ½µÄipµØÖ·ÊÇÍøÂç×Ö½ÚĞò NBO Èç¹ûÊÇ×Ô¼º´«ÈëµÄipµØÖ·²»Ïëµ÷ÓÃgethostĞèÒª×ªÎªNBO
+    ///è¿™ä¸ªget åˆ°çš„ipåœ°å€æ˜¯ç½‘ç»œå­—èŠ‚åº NBO å¦‚æœæ˜¯è‡ªå·±ä¼ å…¥çš„ipåœ°å€ä¸æƒ³è°ƒç”¨gethostéœ€è¦è½¬ä¸ºNBO
     ht=gethostbyname(host);
     if(ht==NULL)return -1;
 
     memset(&servaddr,0,sizeof(sockaddr_in));
-    ///°ÑµÚÒ»¸öipµØÖ·copy¹ıÀ´ ¶¼ÊÇNBO
+    ///æŠŠç¬¬ä¸€ä¸ªipåœ°å€copyè¿‡æ¥ éƒ½æ˜¯NBO
     memcpy(&servaddr.sin_addr.s_addr,ht->h_addr,ht->h_length);
     servaddr.sin_family=AF_INET;
     servaddr.sin_port=htons(port);
 
 
-    ///ÏÂÃæÊÇÑéÖ¤hostentºÍsockaddrÊÇ´ó¶Ë»¹ÊÇĞ¡¶Ë
+    ///ä¸‹é¢æ˜¯éªŒè¯hostentå’Œsockaddræ˜¯å¤§ç«¯è¿˜æ˜¯å°ç«¯
 //    char* t=(char*)(ht->h_addr);
 //    cout<<bitset<32>(*(int*)t)<<endl;
 //    unsigned char u1=t[3];
@@ -99,9 +98,9 @@ int lisopen(char* host,in_addr* addr,int* dataPort){
     struct hostent* ht=gethostbyname(host);
     struct sockaddr_in sa;
     bzero(&sa,sizeof(sockaddr_in));
-    ///INADDR_ANY ÊÇ½ÓÊÜËùÓĞÀ´Ô´µØÖ·µÄÁ¬½ÓÇëÇó
+    ///INADDR_ANY æ˜¯æ¥å—æ‰€æœ‰æ¥æºåœ°å€çš„è¿æ¥è¯·æ±‚
     sa.sin_addr.s_addr=htonl(INADDR_ANY);
-    ///ÏÈËæ»ú·ÖÅäÒ»¸ö
+    ///å…ˆéšæœºåˆ†é…ä¸€ä¸ª
     sa.sin_port=htons(0);
     sa.sin_family=AF_INET;
 
@@ -160,6 +159,7 @@ void FtpList(int dataSock){
     for(;;){
         if((nread=recv(dataSock,rbuf1,MAXBUF,0))<0){
             printf("recv error.\n");
+            ERR_EXIT("FtpList recv error.");
         }else if(nread==0){
             break;
         }
@@ -171,12 +171,13 @@ void FtpList(int dataSock){
 }
 
 void FtpGet(int dataSock,char* filename){
-    ///TRUNC ÓĞ´æÔÚÎÄ¼ş¾ÍÇå¿Õ  ºóÃæÁ½¸öÊÇ´´½¨ÎÄ¼şµÄ»°Ìá¹©µÄ·ÃÎÊ²ÎÊı
+    ///TRUNC æœ‰å­˜åœ¨æ–‡ä»¶å°±æ¸…ç©º  åé¢ä¸¤ä¸ªæ˜¯åˆ›å»ºæ–‡ä»¶çš„è¯æä¾›çš„è®¿é—®å‚æ•°
     int fd=open(filename,O_WRONLY|O_CREAT|O_TRUNC,S_IWRITE|S_IREAD);
     int nread;
     for(;;){
         if((nread=recv(dataSock,rbuf1,MAXBUF,0))<0){
             printf("receive error.\n");
+	    break;
         }else if(nread==0){
             break;
         }
@@ -217,18 +218,18 @@ void CmdTcp(int cmdSock){
         FD_SET(STDIN_FILENO,&rset);
         FD_SET(cmdSock,&rset);
         if(select(maxfdp1,&rset,NULL,NULL,NULL)<0){
-            ///×îºóÒ»¸öÊÇÊ±¼ä ²»ÉèÖÃµÈ´ıÊ±¼ä
+            ///æœ€åä¸€ä¸ªæ˜¯æ—¶é—´ ä¸è®¾ç½®ç­‰å¾…æ—¶é—´
             printf("select error.\n");
         }
         if(FD_ISSET(STDIN_FILENO,&rset)){
-            ///×Ö½ÚË¢0µÄº¯Êı ¸úmemset²î²»¶à
+            ///å­—èŠ‚åˆ·0çš„å‡½æ•° è·Ÿmemsetå·®ä¸å¤š
             bzero(rbuf1,MAXBUF),bzero(wbuf,MAXBUF);
-            ///¶ÁÖ®¶àMAXBUF¸ö×Ö½Ú£¬ÆäÊµ¾ÍÊÇ»º³åÇø´óĞ¡
+            ///è¯»ä¹‹å¤šMAXBUFä¸ªå­—èŠ‚ï¼Œå…¶å®å°±æ˜¯ç¼“å†²åŒºå¤§å°
             if((nread=read(STDIN_FILENO,rbuf1,MAXBUF))<0)
                 printf("read error from stdin.\n");
 
 
-//            printf("stdin´«À´Êı¾İ replycode:%d\n",replycode);
+//            printf("stdinä¼ æ¥æ•°æ® replycode:%d\n",replycode);
 
             if(replycode==USERNAME){
                 nwrite=sprintf(wbuf,"USER %s",rbuf1);
@@ -255,7 +256,7 @@ void CmdTcp(int cmdSock){
                     if(close(cmdSock)<0)printf("close error\n");
                     break;
                 }else if(strncmp(rbuf1,"cwd",3)==0){
-                    ///ÆäÊµftpĞ­ÒéÃüÁîĞ¡Ğ´Ò²ÊÇ¿ÉÒÔµÄ
+                    ///å…¶å®ftpåè®®å‘½ä»¤å°å†™ä¹Ÿæ˜¯å¯ä»¥çš„
                     nwrite=sprintf(wbuf,"%s",rbuf1);
                     if(write(cmdSock,wbuf,nwrite)!=nwrite)
                         printf("write error\n");
@@ -326,19 +327,22 @@ void CmdTcp(int cmdSock){
 
         }
 
-        //rbuf wbuf ¶¼ÊÇ ¶ÁĞ´ÃüÁî¶Ë¿ÚµÄ  rbuf1 wbuf1ÊÇ¶ÁĞ´stdin stdout Êı¾İ¶Ë¿ÚµÄ
+        //rbuf wbuf éƒ½æ˜¯ è¯»å†™å‘½ä»¤ç«¯å£çš„  rbuf1 wbuf1æ˜¯è¯»å†™stdin stdout æ•°æ®ç«¯å£çš„
 
         if(FD_ISSET(cmdSock,&rset)){
             bzero(rbuf,strlen(rbuf));
-            if((nread=recv(cmdSock,rbuf,MAXBUF,0))<0)
+            if((nread=recv(cmdSock,rbuf,MAXBUF,0))<0){
                 printf("recv error\n");
-            else if(nread==0)break; ///¼ì²âµ½ÓĞ·şÎñÆ÷·µ»Ø¿É¶ÁÈ´·µ»Ø0
+                ERR_EXIT("read cmd after select error.");
+            }
+
+            else if(nread==0)break; ///æ£€æµ‹åˆ°æœ‰æœåŠ¡å™¨è¿”å›å¯è¯»å´è¿”å›0
 
             int numWrite=strlen(rbuf);
             if(write(STDOUT_FILENO,rbuf,numWrite)!=numWrite)
                 printf("write error to stdout\n");
 
-            ///220 ¶ÔĞÂÓÃ»§µÄ·şÎñÒÑ×¼±¸ºÃ  550 Î´µÇÂ¼
+            ///220 å¯¹æ–°ç”¨æˆ·çš„æœåŠ¡å·²å‡†å¤‡å¥½  550 æœªç™»å½•
             if(strncmp(rbuf,"220",3)==0||strncmp(rbuf,"550",3)==0){
                 write(STDOUT_FILENO,"Name:",5);
                 replycode=USERNAME;
@@ -356,76 +360,59 @@ void CmdTcp(int cmdSock){
             }else if(strncmp(rbuf,"550",3)==0){
                 replycode=550;
             }else if(strncmp(rbuf,"227",3)==0){
-                //·şÎñÆ÷½øÈë±»¶¯Ä£Ê½  ÏÖÔÚ¿´¿´Ö®Ç°µÄtagÒª×öÊ²Ã´
+                //æœåŠ¡å™¨è¿›å…¥è¢«åŠ¨æ¨¡å¼  ç°åœ¨çœ‹çœ‹ä¹‹å‰çš„tagè¦åšä»€ä¹ˆ
                 int dataPort=getPort(rbuf);
 //                printf("host:%s port:%d\n",host,dataPort);
                 dataSock=cliopen(host,dataPort);
                 if(tag==CMDLS){
-                    ///ÏÈ½¨Á¢Êı¾İÁ¬½Ó ÔÙ·¢ËÍÃüÁî
+                    ///å…ˆå»ºç«‹æ•°æ®è¿æ¥ å†å‘é€å‘½ä»¤
                     nwrite=sprintf(wbuf,"list\n");
                     if(write(cmdSock,wbuf,nwrite)!=nwrite)
                         printf("write error\n");
-                    FtpList(dataSock);
+//                    FtpList(dataSock);
                 }else if(tag==CMDGET){
                     nwrite=sprintf(wbuf,"RETR %s\n",filename);
                     if(write(cmdSock,wbuf,nwrite)!=nwrite)
                         printf("write error\n");
-                    FtpGet(dataSock,filename);
+//                    FtpGet(dataSock,filename);
                 }else if(tag==CMDPUT){
                     nwrite=sprintf(wbuf,"STOR %s\n",filename);
                     if(write(cmdSock,wbuf,nwrite)!=nwrite)
                         printf("write error\n");
-                    FtpPut(dataSock,filename);
+//                    FtpPut(dataSock,filename);
                 }
 
             }else if(strncmp(rbuf,"200",3)==0){
-                ///·şÎñÆ÷·µ»ØÃüÁîÕı³£Ö´ĞĞ
+                ///æœåŠ¡å™¨è¿”å›å‘½ä»¤æ­£å¸¸æ‰§è¡Œ
                 if(tag==CMDLS){
-                    ///ÏÈ½¨Á¢Êı¾İÁ¬½Ó ÔÙ·¢ËÍÃüÁî
-                    nwrite=sprintf(wbuf,"list\n");
+                    ///å…ˆå»ºç«‹æ•°æ®è¿æ¥ å†å‘é€å‘½ä»¤
+                    nwrite=sprintf(wbuf,"LIST\n");
                     if(write(cmdSock,wbuf,nwrite)!=nwrite)
                         printf("write error\n");
-//                    int recvSock=getRecvPort(dataSock);
-//                    FtpList(recvSock);
-//                    close(dataSock);
                 }else if(tag==CMDGET){
                     nwrite=sprintf(wbuf,"RETR %s\n",filename);
                     if(write(cmdSock,wbuf,nwrite)!=nwrite)
                         printf("write error\n");
-//                    int recvSock=getRecvPort(dataSock);
-//                    FtpGet(recvSock,filename);
-//                    close(dataSock);
                 }else if(tag==CMDPUT){
                     nwrite=sprintf(wbuf,"STOR %s\n",filename);
                     if(write(cmdSock,wbuf,nwrite)!=nwrite)
                         printf("write error\n");
-//                    int recvSock=getRecvPort(dataSock);
-//                    FtpPut(recvSock,filename);
-//                    close(dataSock);
                 }
             }else if(strncmp(rbuf,"150",3)==0){
                 if(tag==CMDLS){
-                    ///ÏÈ½¨Á¢Êı¾İÁ¬½Ó ÔÙ·¢ËÍÃüÁî
-//                    nwrite=sprintf(wbuf,"list\n");
-//                    if(write(cmdSock,wbuf,nwrite)!=nwrite)
-//                        printf("write error\n");
-                    int recvSock=getRecvPort(dataSock);
-                    FtpList(recvSock);
-                    close(dataSock);
+                    ///å…ˆå»ºç«‹æ•°æ®è¿æ¥ å†å‘é€å‘½ä»¤
+                    ///ä¸»åŠ¨æ¨¡å¼ä¸‹éœ€è¦ä»ç›‘å¬çš„dataSocké‚£è·å–å¦ä¸€ä¸ªç”¨äºä¼ è¾“çš„socket,è¢«åŠ¨æ¨¡å¼ç›´æ¥å–dataSock(å®ƒä¸»åŠ¨connect server)
+                    int fd=bPort?getRecvPort(dataSock):dataSock;
+                    FtpList(fd);
+                    if(bPort)close(dataSock);
                 }else if(tag==CMDGET){
-//                    nwrite=sprintf(wbuf,"RETR %s\n",filename);
-//                    if(write(cmdSock,wbuf,nwrite)!=nwrite)
-//                        printf("write error\n");
-                    int recvSock=getRecvPort(dataSock);
-                    FtpGet(recvSock,filename);
-                    close(dataSock);
+                    int fd=bPort?getRecvPort(dataSock):dataSock;
+                    FtpGet(fd,filename);
+                    if(bPort)close(dataSock);
                 }else if(tag==CMDPUT){
-//                    nwrite=sprintf(wbuf,"STOR %s\n",filename);
-//                    if(write(cmdSock,wbuf,nwrite)!=nwrite)
-//                        printf("write error\n");
-                    int recvSock=getRecvPort(dataSock);
-                    FtpPut(recvSock,filename);
-                    close(dataSock);
+                    int fd=bPort?getRecvPort(dataSock):dataSock;
+                    FtpPut(fd,filename);
+                    if(bPort)close(dataSock);
                 }
             }
 

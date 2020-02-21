@@ -15,6 +15,12 @@
 #define CLOSEDATA 226
 #define ACTIONOK 250
 
+#define ERR_EXIT(msg) \
+    do { \
+        perror(msg); \
+        exit(EXIT_FAILURE); \
+    } while(0)
+
 int cliopen(char* host,int port);
 int getPort(char* buf);
 void getFileName(char* buf,char* filename);
